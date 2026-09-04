@@ -22,6 +22,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: python3 scripts/validate_repo.py
+      - run: python3 scripts/test_runpod.py
+      - run: python3 scripts/test_downloader.py
 
   build:
     needs: validate

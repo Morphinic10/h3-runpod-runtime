@@ -1,0 +1,292 @@
+2026-09-04T22:11:44+00:00
+Linux e9ea5350b325 6.8.0-138-generic #138-Ubuntu SMP PREEMPT_DYNAMIC Fri Jul 31 22:41:49 UTC 2026 x86_64 GNU/Linux
+uid=0(root) gid=0(root) groups=0(root)
+ls: cannot access '/dev/dri': No such file or directory
+crw-rw-rw- 1 nobody nogroup 195, 254 Aug 31 05:59 /dev/nvidia-modeset
+crw-rw-rw- 1 nobody nogroup 507,   0 Aug 31 05:59 /dev/nvidia-uvm
+crw-rw-rw- 1 nobody nogroup 507,   1 Aug 31 05:59 /dev/nvidia-uvm-tools
+crw-rw-rw- 1 nobody nogroup 195,   5 Aug 31 05:59 /dev/nvidia5
+crw-rw-rw- 1 nobody nogroup 195, 255 Aug 31 05:59 /dev/nvidiactl
+NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  580.178.04  Release Build  (dvs-builder@U22-I3-AE18-16-4)  Tue Jul  7 12:18:12 UTC 2026
+GCC version:  gcc version 13.3.0 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 
+Model: 		 NVIDIA GeForce RTX 4090
+IRQ:   		 384
+GPU UUID: 	 GPU-77ce1eb4-76fa-0b1f-72c5-765dea10c773
+Video BIOS: 	 95.02.3c.80.13
+Bus Type: 	 PCIe
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:17:00.0
+Device Minor: 	 0
+GPU Firmware: 	 580.178.04
+GPU Excluded:	 No
+Model: 		 NVIDIA GeForce RTX 4090
+IRQ:   		 385
+GPU UUID: 	 GPU-7cfb69a0-901d-70e9-8e07-34f18cf56c28
+Video BIOS: 	 95.02.3c.80.13
+Bus Type: 	 PCIe
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:18:00.0
+Device Minor: 	 1
+GPU Firmware: 	 580.178.04
+GPU Excluded:	 No
+Model: 		 NVIDIA GeForce RTX 4090
+IRQ:   		 387
+GPU UUID: 	 GPU-52e0d57b-5ac6-6cb6-047e-6cd084d533de
+Video BIOS: 	 95.02.3c.80.13
+Bus Type: 	 PCIe
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:31:00.0
+Device Minor: 	 2
+GPU Firmware: 	 580.178.04
+GPU Excluded:	 No
+Model: 		 NVIDIA GeForce RTX 4090
+IRQ:   		 388
+GPU UUID: 	 GPU-4ead39da-0b1e-03b9-6dbc-3a91f8496398
+Video BIOS: 	 95.02.3c.80.13
+Bus Type: 	 PCIe
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:32:00.0
+Device Minor: 	 3
+GPU Firmware: 	 580.178.04
+GPU Excluded:	 No
+Model: 		 NVIDIA GeForce RTX 4090
+IRQ:   		 389
+GPU UUID: 	 GPU-538e783c-6f99-8c97-3229-f24636943f5c
+Video BIOS: 	 95.02.3c.80.13
+Bus Type: 	 PCIe
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:65:00.0
+Device Minor: 	 4
+GPU Firmware: 	 580.178.04
+GPU Excluded:	 No
+Model: 		 NVIDIA GeForce RTX 4090
+IRQ:   		 386
+GPU UUID: 	 GPU-5170b617-c829-2fed-4d4e-0eb9a2a43f59
+Video BIOS: 	 95.02.3c.80.13
+Bus Type: 	 PCIe
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:98:00.0
+Device Minor: 	 5
+GPU Firmware: 	 580.178.04
+GPU Excluded:	 No
+Model: 		 NVIDIA GeForce RTX 4090
+IRQ:   		 390
+GPU UUID: 	 GPU-9ce621ce-a1f7-05be-0683-a038d579c579
+Video BIOS: 	 95.02.3c.80.9a
+Bus Type: 	 PCIe
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:b1:00.0
+Device Minor: 	 6
+GPU Firmware: 	 580.178.04
+GPU Excluded:	 No
+Model: 		 NVIDIA GeForce RTX 4090
+IRQ:   		 391
+GPU UUID: 	 GPU-477bb3a9-4a6c-e90c-e8fe-d1ef133f8d67
+Video BIOS: 	 95.02.3c.80.13
+Bus Type: 	 PCI
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:b2:00.0
+Device Minor: 	 7
+GPU Firmware: 	 580.178.04
+GPU Excluded:	 No
+void
+compute,utility
+	libnvidia-vksc-core.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-vksc-core.so.1
+	libnvidia-tls.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-tls.so.580.178.04
+	libnvidia-sandboxutils.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-sandboxutils.so.1
+	libnvidia-rtcore.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-rtcore.so.580.178.04
+	libnvidia-ptxjitcompiler.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-ptxjitcompiler.so.1
+	libnvidia-present.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-present.so.580.178.04
+	libnvidia-pkcs11-openssl3.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-pkcs11-openssl3.so.580.178.04
+	libnvidia-opticalflow.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-opticalflow.so.1
+	libnvidia-opticalflow.so (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-opticalflow.so
+	libnvidia-opencl.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-opencl.so.1
+	libnvidia-nvvm70.so.4 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-nvvm70.so.4
+	libnvidia-nvvm.so.4 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-nvvm.so.4
+	libnvidia-ngx.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-ngx.so.1
+	libnvidia-ml.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-ml.so.1
+	libnvidia-gpucomp.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-gpucomp.so.580.178.04
+	libnvidia-glvkspirv.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-glvkspirv.so.580.178.04
+	libnvidia-glsi.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-glsi.so.580.178.04
+	libnvidia-glcore.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-glcore.so.580.178.04
+	libnvidia-fbc.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-fbc.so.1
+	libnvidia-encode.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-encode.so.1
+	libnvidia-encode.so (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-encode.so
+	libnvidia-eglcore.so.580.178.04 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-eglcore.so.580.178.04
+	libnvidia-egl-wayland.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-egl-wayland.so.1
+	libnvidia-egl-gbm.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-egl-gbm.so.1
+	libnvidia-cfg.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-cfg.so.1
+	libnvidia-allocator.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libnvidia-allocator.so.1
+	libcudadebugger.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libcudadebugger.so.1
+	libcuda.so.1 (libc6,x86-64) => /lib/x86_64-linux-gnu/libcuda.so.1
+	libcuda.so (libc6,x86-64) => /lib/x86_64-linux-gnu/libcuda.so
+0::/
+Fri Sep  4 22:11:44 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 4090        On  |   00000000:98:00.0 Off |                  Off |
+|  0%   28C    P8              4W /  450W |       1MiB /  24564MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+=== Original environment ===
+DEVICE_OPEN_OK /dev/nvidia5
+DEVICE_OPEN_OK /dev/nvidiactl
+DEVICE_OPEN_FAIL /dev/nvidia-uvm-tools [Errno 5] Input/output error: '/dev/nvidia-uvm-tools'
+DEVICE_OPEN_FAIL /dev/nvidia-uvm [Errno 5] Input/output error: '/dev/nvidia-uvm'
+DEVICE_OPEN_OK /dev/nvidia-modeset
+CUDA_DRIVER 13000 cuInit 999
+7d89f9400000-7d89f9566000 r--p 00000000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7d89f9566000-7d89fa4ea000 r-xp 00166000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7d89fa4ea000-7d89fee95000 r--p 010ea000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7d89fee95000-7d89fee96000 ---p 05a95000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7d89fee96000-7d89fefcb000 r--p 05a95000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7d89fefcb000-7d89fefd4000 rw-p 05bca000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+=== No NVIDIA_VISIBLE_DEVICES sentinel ===
+DEVICE_OPEN_OK /dev/nvidia5
+DEVICE_OPEN_OK /dev/nvidiactl
+DEVICE_OPEN_FAIL /dev/nvidia-uvm-tools [Errno 5] Input/output error: '/dev/nvidia-uvm-tools'
+DEVICE_OPEN_FAIL /dev/nvidia-uvm [Errno 5] Input/output error: '/dev/nvidia-uvm'
+DEVICE_OPEN_OK /dev/nvidia-modeset
+CUDA_DRIVER 13000 cuInit 999
+7240f4000000-7240f4166000 r--p 00000000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7240f4166000-7240f50ea000 r-xp 00166000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7240f50ea000-7240f9a95000 r--p 010ea000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7240f9a95000-7240f9a96000 ---p 05a95000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7240f9a96000-7240f9bcb000 r--p 05a95000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7240f9bcb000-7240f9bd4000 rw-p 05bca000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+=== Traced CUDA initialization ===
+DEVICE_OPEN_OK /dev/nvidia5
+DEVICE_OPEN_OK /dev/nvidiactl
+DEVICE_OPEN_FAIL /dev/nvidia-uvm-tools [Errno 5] Input/output error: '/dev/nvidia-uvm-tools'
+DEVICE_OPEN_FAIL /dev/nvidia-uvm [Errno 5] Input/output error: '/dev/nvidia-uvm'
+DEVICE_OPEN_OK /dev/nvidia-modeset
+CUDA_DRIVER 13000 cuInit 999
+75227c800000-75227c966000 r--p 00000000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+75227c966000-75227d8ea000 r-xp 00166000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+75227d8ea000-752282295000 r--p 010ea000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+752282295000-752282296000 ---p 05a95000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+752282296000-7522823cb000 r--p 05a95000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+7522823cb000-7522823d4000 rw-p 05bca000 103:03 165753385                 /usr/lib/x86_64-linux-gnu/libcuda.so.580.178.04
+=== Failing driver calls ===
+207   ioctl(3, TCGETS, 0x7ffcae5d4280)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d4db0)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d4fc0)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d5af0)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d6190)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d5af0)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d5af0)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d5660)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d5af0)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(3, TCGETS, 0x7ffcae5d5450)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   newfstatat(AT_FDCWD, "/dev/nvidia-caps", {st_mode=S_IFDIR|0755, st_size=40, ...}, 0) = 0
+207   newfstatat(AT_FDCWD, "/dev/nvidia5", {st_mode=S_IFCHR|0666, st_rdev=makedev(0xc3, 0x5), ...}, 0) = 0
+207   openat(AT_FDCWD, "/dev/nvidia5", O_RDWR|O_CLOEXEC) = 3
+207   write(1, "/dev/nvidia5", 12)      = 12
+207   newfstatat(AT_FDCWD, "/dev/nvidiactl", {st_mode=S_IFCHR|0666, st_rdev=makedev(0xc3, 0xff), ...}, 0) = 0
+207   openat(AT_FDCWD, "/dev/nvidiactl", O_RDWR|O_CLOEXEC) = 3
+207   write(1, "/dev/nvidiactl", 14)    = 14
+207   newfstatat(AT_FDCWD, "/dev/nvidia-uvm-tools", {st_mode=S_IFCHR|0666, st_rdev=makedev(0x1fb, 0x1), ...}, 0) = 0
+207   openat(AT_FDCWD, "/dev/nvidia-uvm-tools", O_RDWR|O_CLOEXEC) = -1 EIO (Input/output error)
+207   write(1, "/dev/nvidia-uvm-tools", 21) = 21
+207   write(1, "[Errno 5] Input/output error: '/dev/nvidia-uvm-tools'", 53) = 53
+207   newfstatat(AT_FDCWD, "/dev/nvidia-uvm", {st_mode=S_IFCHR|0666, st_rdev=makedev(0x1fb, 0), ...}, 0) = 0
+207   openat(AT_FDCWD, "/dev/nvidia-uvm", O_RDWR|O_CLOEXEC) = -1 EIO (Input/output error)
+207   write(1, "/dev/nvidia-uvm", 15)   = 15
+207   write(1, "[Errno 5] Input/output error: '/dev/nvidia-uvm'", 47) = 47
+207   newfstatat(AT_FDCWD, "/dev/nvidia-modeset", {st_mode=S_IFCHR|0666, st_rdev=makedev(0xc3, 0xfe), ...}, 0) = 0
+207   openat(AT_FDCWD, "/dev/nvidia-modeset", O_RDWR|O_CLOEXEC) = 3
+207   write(1, "/dev/nvidia-modeset", 19) = 19
+207   openat(AT_FDCWD, "/root/.nv/nvidia-application-profile-globals-rc", O_RDONLY) = -1 ENOENT (No such file or directory)
+207   openat(AT_FDCWD, "/root/.nv/nvidia-application-profiles-rc", O_RDONLY) = -1 ENOENT (No such file or directory)
+207   openat(AT_FDCWD, "/root/.nv/nvidia-application-profiles-rc.d", O_RDONLY) = -1 ENOENT (No such file or directory)
+207   openat(AT_FDCWD, "/etc/nvidia/nvidia-application-profiles-rc", O_RDONLY) = -1 ENOENT (No such file or directory)
+207   openat(AT_FDCWD, "/etc/nvidia/nvidia-application-profiles-rc.d/", O_RDONLY) = 8
+207   openat(AT_FDCWD, "/etc/nvidia/nvidia-application-profiles-rc.d/", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 8
+207   openat(AT_FDCWD, "/etc/nvidia/nvidia-application-profiles-rc.d//10-container.conf", O_RDONLY) = 8
+207   openat(AT_FDCWD, "/usr/share/nvidia/nvidia-application-profiles-580.178.04-rc", O_RDONLY) = -1 ENOENT (No such file or directory)
+207   openat(AT_FDCWD, "/usr/share/nvidia/nvidia-application-profiles-rc", O_RDONLY) = -1 ENOENT (No such file or directory)
+207   connect(8, {sa_family=AF_UNIX, sun_path="/tmp/nvidia-mps/control"}, 26) = -1 ENOENT (No such file or directory)
+207   readlink("/proc", 0x7ffcae5d5510, 1023) = -1 EINVAL (Invalid argument)
+207   readlink("/proc/207", 0x7ffcae5d5510, 1023) = -1 EINVAL (Invalid argument)
+207   readlink("/usr", 0x7ffcae5d5510, 1023) = -1 EINVAL (Invalid argument)
+207   readlink("/usr/local", 0x7ffcae5d5510, 1023) = -1 EINVAL (Invalid argument)
+207   readlink("/usr/local/bin", 0x7ffcae5d5510, 1023) = -1 EINVAL (Invalid argument)
+207   readlink("/usr/local/bin/python3.11", 0x7ffcae5d5510, 1023) = -1 EINVAL (Invalid argument)
+207   access("/sys/module/nvidia/initstate", R_OK) = 0
+207   openat(AT_FDCWD, "/proc/driver/nvidia/params", O_RDONLY) = 8
+207   stat("/dev/nvidiactl", {st_mode=S_IFCHR|0666, st_rdev=makedev(0xc3, 0xff), ...}) = 0
+207   symlink("../nvidiactl", "/dev/char/195:255") = -1 ENOENT (No such file or directory)
+207   stat("/usr/bin/nvidia-modprobe", 0x7ffcae5d5800) = -1 ENOENT (No such file or directory)
+207   openat(AT_FDCWD, "/proc/driver/nvidia/params", O_RDONLY) = 8
+207   stat("/dev/nvidiactl", {st_mode=S_IFCHR|0666, st_rdev=makedev(0xc3, 0xff), ...}) = 0
+207   openat(AT_FDCWD, "/dev/nvidiactl", O_RDWR) = 8
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0xd6, 0x8), 0x7ffcae5d5b40) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0xc8, 0x900), 0x752282427aa0) = 0
+207   stat("/proc/driver/nvidia/gpus/0000:17:00.0/numa_status", 0x7ffcae5d5ab0) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:18:00.0/numa_status", 0x7ffcae5d5ab0) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:31:00.0/numa_status", 0x7ffcae5d5ab0) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:32:00.0/numa_status", 0x7ffcae5d5ab0) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:65:00.0/numa_status", 0x7ffcae5d5ab0) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:98:00.0/numa_status", 0x7ffcae5d5ab0) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:b1:00.0/numa_status", 0x7ffcae5d5ab0) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:b2:00.0/numa_status", 0x7ffcae5d5ab0) = -1 ENOENT (No such file or directory)
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2b, 0x30), 0x7ffcae5d5c90) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2a, 0x20), 0x7ffcae5d4ba0) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x29, 0x10), 0x7ffcae5d5c80) = 0
+207   access("/sys/module/nvidia/initstate", R_OK) = 0
+207   openat(AT_FDCWD, "/proc/driver/nvidia/params", O_RDONLY) = 8
+207   stat("/dev/nvidiactl", {st_mode=S_IFCHR|0666, st_rdev=makedev(0xc3, 0xff), ...}) = 0
+207   symlink("../nvidiactl", "/dev/char/195:255") = -1 ENOENT (No such file or directory)
+207   stat("/usr/bin/nvidia-modprobe", 0x7ffcae5d5dc0) = -1 ENOENT (No such file or directory)
+207   openat(AT_FDCWD, "/proc/driver/nvidia/params", O_RDONLY) = 8
+207   stat("/dev/nvidiactl", {st_mode=S_IFCHR|0666, st_rdev=makedev(0xc3, 0xff), ...}) = 0
+207   openat(AT_FDCWD, "/dev/nvidiactl", O_RDWR) = 8
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0xd6, 0x8), 0x7ffcae5d6100) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0xc8, 0x900), 0x752282427aa0) = 0
+207   stat("/proc/driver/nvidia/gpus/0000:17:00.0/numa_status", 0x7ffcae5d6070) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:18:00.0/numa_status", 0x7ffcae5d6070) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:31:00.0/numa_status", 0x7ffcae5d6070) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:32:00.0/numa_status", 0x7ffcae5d6070) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:65:00.0/numa_status", 0x7ffcae5d6070) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:98:00.0/numa_status", 0x7ffcae5d6070) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:b1:00.0/numa_status", 0x7ffcae5d6070) = -1 ENOENT (No such file or directory)
+207   stat("/proc/driver/nvidia/gpus/0000:b2:00.0/numa_status", 0x7ffcae5d6070) = -1 ENOENT (No such file or directory)
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2b, 0x30), 0x7ffcae5d6250) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2a, 0x20), 0x7ffcae5d5120) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2a, 0x20), 0x7ffcae5d5120) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2b, 0x30), 0x7ffcae5d6250) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x2a, 0x20), 0x7ffcae5d5130) = 0
+207   get_mempolicy(0x7ffcae5d6340, 0x5ab66b3578e0, 1024, NULL, 0) = -1 EPERM (Operation not permitted)
+207   access("/sys/module/nvidia_uvm/initstate", R_OK) = 0
+207   stat("/dev/nvidia-uvm", {st_mode=S_IFCHR|0666, st_rdev=makedev(0x1fb, 0), ...}) = 0
+207   chmod("/dev/nvidia-uvm", 0666)    = -1 EPERM (Operation not permitted)
+207   stat("/usr/bin/nvidia-modprobe", 0x7ffcae5d6260) = -1 ENOENT (No such file or directory)
+207   openat(AT_FDCWD, "/dev/nvidia-uvm", O_RDWR|O_CLOEXEC) = -1 EIO (Input/output error)
+207   openat(AT_FDCWD, "/dev/nvidia-uvm", O_RDWR) = -1 EIO (Input/output error)
+207   ioctl(-5, _IOC(_IOC_NONE, 0, 0x2, 0x3000), 0) = -1 EBADF (Bad file descriptor)
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x29, 0x10), 0x7ffcae5d62a0) = 0
+207   ioctl(8, _IOC(_IOC_READ|_IOC_WRITE, 0x46, 0x29, 0x10), 0x7ffcae5d62a0) = 0
+207   ioctl(8, TCGETS, 0x7ffcae5d66f0)  = -1 ENOTTY (Inappropriate ioctl for device)
+207   ioctl(8, TCGETS, 0x7ffcae5d66f0)  = -1 ENOTTY (Inappropriate ioctl for device)
+DIAGNOSTIC_COMPLETE

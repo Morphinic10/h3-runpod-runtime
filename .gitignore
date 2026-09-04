@@ -15,3 +15,4 @@ build/
 *.jpeg
 .env
 .secrets/
+.runpod/

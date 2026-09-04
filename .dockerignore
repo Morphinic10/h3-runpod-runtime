@@ -13,3 +13,5 @@
 *.jpg
 *.jpeg
 .DS_Store
+.runpod
+evidence

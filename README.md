@@ -42,6 +42,31 @@ before submitting it.
 
 ## Runtime defaults
 
+### One-command Community 4090 launcher
+
+```bash
+python3 scripts/runpod.py up --image ghcr.io/morphinic10/h3-runpod-runtime@sha256:YOUR_VERIFIED_DIGEST
+python3 scripts/runpod.py status
+python3 scripts/runpod.py stop
+```
+
+The launcher uses the existing local Lab key on this workstation. Elsewhere,
+set `RUNPOD_API_KEY` or `RUNPOD_ENV_FILE`; credentials are never sent to the Pod.
+It checks balance and existing Pods, creates **Community RTX 4090 only**, uses
+150 GB ephemeral container disk and zero volumes, and waits for GPU/node/model
+readiness. A failed boot, missing GPU, interrupted wait or exceeded boot budget
+stops the exact created Pod automatically. The default boot limit is 15 minutes
+and $0.20 (conservative estimate); a successfully ready Pod stays running until
+you use `stop`. These are boot limits, not a spending cap for later generation.
+
+Use `--smoke` to skip models and check only CUDA, nodes and the output format.
+Use `--country CA` to request a specific country. The default download-speed
+floor is 500 Mbps for the 45.8 GB cold model download; it can be changed with
+`--min-download-mbps`. No available matching host is reported without silently
+switching to Secure Cloud or creating persistent storage.
+
+### Container defaults
+
 - Container disk: 150 GB minimum.
 - Model directory: `/workspace/models`.
 - ComfyUI: port `8188`.

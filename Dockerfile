@@ -127,6 +127,13 @@ COPY --from=builder /opt/venv /opt/venv
 COPY --from=builder /opt/ComfyUI /opt/ComfyUI
 COPY --from=builder /opt/h3/config/python-constraints.txt /opt/h3/config/python-constraints.txt
 
+# This large layer precedes launcher/config copies so routine startup fixes
+# reuse the exact same PyTorch layer on builders and on RunPod hosts.
+COPY scripts/ensure-pytorch.sh /usr/local/bin/ensure-pytorch.sh
+ARG BAKE_PYTORCH=1
+RUN chmod 0755 /usr/local/bin/ensure-pytorch.sh \
+    && if [ "$BAKE_PYTORCH" = 1 ]; then /usr/local/bin/ensure-pytorch.sh && python -m pip check; fi
+
 COPY config/models.tsv /opt/h3/config/models.tsv
 COPY config/extra_model_paths.yaml /opt/h3/config/extra_model_paths.yaml
 COPY config/h265-mp4-16in.json /opt/ComfyUI/custom_nodes/ComfyUI-VideoHelperSuite/video_formats/h265-mp4-16in.json
@@ -140,17 +147,12 @@ RUN chmod 0755 /usr/local/bin/download-models.sh /usr/local/bin/ensure-pytorch.s
     && bash -n /usr/local/bin/ensure-pytorch.sh \
     && bash -n /usr/local/bin/entrypoint.sh \
     && python -m compileall -q /opt/h3/tools /opt/ComfyUI/custom_nodes/ComfyUI-KJNodes/nodes/minimax_nodes.py /opt/ComfyUI/custom_nodes/ComfyUI-MiniMax-H3-PDD-Acc \
-    && python -c 'import importlib.util; assert importlib.util.find_spec("comfy_kitchen") is not None; assert importlib.util.find_spec("torch") is None' \
+    && python -c 'import importlib.util; assert importlib.util.find_spec("comfy_kitchen") is not None' \
     && ffmpeg -hide_banner -encoders 2>/dev/null | grep -q libx265 \
     && ffmpeg -hide_banner -loglevel error -f lavfi -i color=size=64x64:rate=1 -frames:v 1 -pix_fmt yuv420p10le -c:v libx265 -x265-params log-level=error /tmp/h3-main10.mp4 \
     && test "$(ffprobe -v error -select_streams v:0 -show_entries stream=pix_fmt -of csv=p=0 /tmp/h3-main10.mp4)" = "yuv420p10le" \
     && rm -f /tmp/h3-main10.mp4 \
     && mkdir -p /workspace/ComfyUI/input /workspace/ComfyUI/output /workspace/ComfyUI/temp /workspace/ComfyUI/user/default/workflows
-
-# Keep the diagnostic/slim layers reusable while making the default image ready
-# to start ComfyUI without pip/network access. Weights remain outside the image.
-ARG BAKE_PYTORCH=1
-RUN if [ "$BAKE_PYTORCH" = 1 ]; then /usr/local/bin/ensure-pytorch.sh && python -m pip check; fi
 
 EXPOSE 8188 8189
 

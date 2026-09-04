@@ -182,8 +182,15 @@ for attempt in $(seq 1 "$CUDA_RETRIES"); do
   echo "[launcher] direct CUDA driver probe ${attempt}/${CUDA_RETRIES}"
   if "$PY_BIN" - <<'PY'
 import ctypes
+import os
 
 count = ctypes.c_int(-1)
+try:
+    uvm = os.open('/dev/nvidia-uvm', os.O_RDWR)
+    os.close(uvm)
+except OSError as error:
+    print(f'[launcher] HOST_UVM_UNAVAILABLE: {error}. The host GPU memory driver is not accessible.', flush=True)
+    raise SystemExit(43)
 libcuda = ctypes.CDLL("libcuda.so.1")
 init_rc = int(libcuda.cuInit(0))
 count_rc = int(libcuda.cuDeviceGetCount(ctypes.byref(count))) if init_rc == 0 else -1
@@ -194,6 +201,12 @@ PY
   then
     driver_ok=1
     break
+  else
+    driver_rc=$?
+    if (( driver_rc == 43 )); then
+      echo "ERROR: Host UVM device failed. Stop this paid Pod and select another machine; reinstalling PyTorch will not repair the host driver." >&2
+      break
+    fi
   fi
   (( attempt == CUDA_RETRIES )) || sleep "$CUDA_RETRY_DELAY_S"
 done

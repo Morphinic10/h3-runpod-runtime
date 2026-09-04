@@ -31,6 +31,11 @@ verify_full() {
   [[ -f "$path" ]] || return 1
   [[ "$(stat -c '%s' "$path")" == "$expected_size" ]] || return 1
   printf '%s  %s\n' "$expected_sha" "$path" | sha256sum --check --status || return 1
+  mark_verified "$path" "$expected_size" "$expected_sha"
+}
+
+mark_verified() {
+  local path="$1" expected_size="$2" expected_sha="$3" marker mtime
   marker="$(marker_path "${path#"$MODEL_DIR"/}")"
   mtime="$(stat -c '%Y' "$path")"
   printf '%s %s %s\n' "$expected_sha" "$expected_size" "$mtime" > "$marker"
@@ -72,7 +77,8 @@ download_one() {
     fi
     if printf '%s  %s\n' "$expected_sha" "$part" | sha256sum --check --status; then
       mv -f -- "$part" "$target"
-      verify_full "$target" "$expected_size" "$expected_sha"
+      # Rename preserves the bytes just hashed; don't read the entire model twice.
+      mark_verified "$target" "$expected_size" "$expected_sha"
       echo "[models] verified: $relative_path"
       return 0
     fi
@@ -98,20 +104,15 @@ required_bytes=$((missing_bytes + MODEL_RESERVE_BYTES))
 echo "[models] missing payload: $missing_bytes bytes; free: $free_bytes bytes"
 (( free_bytes >= required_bytes )) || { echo "ERROR: need $required_bytes bytes free; found $free_bytes" >&2; exit 21; }
 
-job_count=0
-pids=()
-failed=0
+# xargs keeps every slot busy and returns nonzero if ANY child fails, including
+# children that finish before the final wait. TSV fields are passed as argv.
+if ! {
 while IFS=$'\t' read -r relative_path expected_size expected_sha url; do
   [[ -z "${relative_path:-}" || "$relative_path" == \#* ]] && continue
-  job_count=$((job_count + 1))
-  if (( ${#pids[@]} >= MODEL_DOWNLOAD_CONCURRENCY )); then
-    if ! wait "${pids[0]}"; then failed=1; fi
-    pids=("${pids[@]:1}")
-  fi
-  "$0" --one "$relative_path" "$expected_size" "$expected_sha" "$url" \
-    > >(sed -u "s|^|[$job_count] |") 2> >(sed -u "s|^|[$job_count] |" >&2) &
-  pids+=("$!")
+  printf '%s\0' "$relative_path" "$expected_size" "$expected_sha" "$url"
 done < "$MODEL_MANIFEST"
-for pid in "${pids[@]}"; do if ! wait "$pid"; then failed=1; fi; done
-(( failed == 0 )) || { echo "ERROR: at least one model download failed" >&2; exit 22; }
+} | xargs -0 -r -n 4 -P "$MODEL_DOWNLOAD_CONCURRENCY" "$0" --one; then
+  echo "ERROR: at least one model download failed" >&2
+  exit 22
+fi
 echo "[models] all selected models are ready"

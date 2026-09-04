@@ -44,11 +44,19 @@ before submitting it.
 - Model directory: `/workspace/models`.
 - ComfyUI: port `8188`.
 - Boot/model log: port `8189`, path `/launch.log`.
+- During boot, port `8188` serves a small status page until ComfyUI takes over.
 - No network volume.
 - No global Sage attention flag; attention is selected in the graph.
 - Pinned memory disabled and ComfyUI cache disabled for predictable RAM use.
 
 Set `H3_DOWNLOAD_MODELS=0` for a node-only/CUDA smoke boot. The default is `1`.
+
+The CUDA preflight retries for one minute by default and records the host
+driver, NVIDIA device files, direct `libcuda` initialization, and PyTorch CUDA
+state. If CUDA, a model download, or ComfyUI startup fails, the container stays
+alive and serves the failure at both `:8188/` and `:8189/launch.log` instead of
+crash-looping. Set `H3_HOLD_ON_ERROR=0` only in automated tests where a failed
+container must exit.
 
 After ComfyUI is ready, validate the live runtime from any machine with:
 

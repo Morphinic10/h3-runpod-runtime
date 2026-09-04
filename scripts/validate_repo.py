@@ -60,6 +60,17 @@ def main() -> None:
     subprocess.run(["bash", "-n", str(ROOT / "scripts/download-models.sh")], check=True)
     subprocess.run(["bash", "-n", str(ROOT / "scripts/entrypoint.sh")], check=True)
 
+    entrypoint = (ROOT / "scripts/entrypoint.sh").read_text(encoding="utf-8")
+    for required_diagnostic in (
+        "H3_HOLD_ON_ERROR",
+        "H3_CUDA_RETRIES",
+        "ctypes.CDLL(\"libcuda.so.1\")",
+        "torch.cuda.is_available",
+        "start_status_server",
+        "fatal_hold",
+    ):
+        assert required_diagnostic in entrypoint, f"missing boot diagnostic: {required_diagnostic}"
+
     payload_bytes, model_names = validate_manifest()
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     workflow_path = ROOT / contract["reference_workflow"]

@@ -174,38 +174,47 @@ ls -la /dev/nvidia* 2>&1 || true
 echo "[launcher] nvidia-smi:"
 nvidia-smi 2>&1 || true
 
-cuda_ok=0
+driver_ok=0
 for attempt in $(seq 1 "$CUDA_RETRIES"); do
-  echo "[launcher] CUDA preflight attempt ${attempt}/${CUDA_RETRIES}"
+  echo "[launcher] direct CUDA driver probe ${attempt}/${CUDA_RETRIES}"
   set +e
   "$PY_BIN" - <<'PY'
 import ctypes
-import torch
 
 count = ctypes.c_int(-1)
 libcuda = ctypes.CDLL("libcuda.so.1")
 init_rc = int(libcuda.cuInit(0))
 count_rc = int(libcuda.cuDeviceGetCount(ctypes.byref(count))) if init_rc == 0 else -1
 print(f"[launcher] libcuda: cuInit={init_rc} cuDeviceGetCount={count_rc} devices={count.value}", flush=True)
+if init_rc != 0 or count_rc != 0 or count.value < 1:
+    raise SystemExit(1)
+PY
+  driver_rc=$?
+  set -e
+  if (( driver_rc == 0 )); then
+    driver_ok=1
+    break
+  fi
+  (( attempt == CUDA_RETRIES )) || sleep "$CUDA_RETRY_DELAY_S"
+done
+(( driver_ok == 1 )) || { echo "ERROR: direct CUDA driver probe exhausted all retries" >&2; false; }
+
+write_status "installing_pytorch" "The GPU driver is healthy. Installing the pinned PyTorch CUDA 12.8 runtime."
+/usr/local/bin/ensure-pytorch.sh
+
+echo "[launcher] PyTorch CUDA compute preflight"
+"$PY_BIN" - <<'PY'
+import torch
+
 print(f"[launcher] torch={torch.__version__} compiled_cuda={torch.version.cuda}", flush=True)
 print(f"[launcher] torch.cuda.is_available={torch.cuda.is_available()} count={torch.cuda.device_count()}", flush=True)
-if init_rc != 0 or count_rc != 0 or count.value < 1 or not torch.cuda.is_available():
-    raise SystemExit(1)
+assert torch.cuda.is_available(), "PyTorch CUDA unavailable"
 x = torch.randn((128, 128), device="cuda", dtype=torch.bfloat16)
 y = x @ x
 torch.cuda.synchronize()
 assert y.shape == x.shape
 print(f"[launcher] CUDA OK: {torch.cuda.get_device_name(0)}", flush=True)
 PY
-  cuda_rc=$?
-  set -e
-  if (( cuda_rc == 0 )); then
-    cuda_ok=1
-    break
-  fi
-  (( attempt == CUDA_RETRIES )) || sleep "$CUDA_RETRY_DELAY_S"
-done
-(( cuda_ok == 1 )) || { echo "ERROR: CUDA preflight exhausted all retries" >&2; false; }
 
 write_status "downloading_models" "CUDA is healthy. Downloading and checksum-verifying the model manifest."
 case "${H3_DOWNLOAD_MODELS:-1}" in

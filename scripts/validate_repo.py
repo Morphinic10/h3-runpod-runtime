@@ -22,6 +22,7 @@ REQUIRED = {
     "contracts/runtime-contract.json",
     "workflows/current-turbo8.api.json",
     "scripts/download-models.sh",
+    "scripts/ensure-pytorch.sh",
     "scripts/entrypoint.sh",
     "scripts/preflight.py",
     ".github/workflows/build-image.yml",
@@ -58,6 +59,7 @@ def main() -> None:
     for relative in ("config/h265-mp4-16in.json", "contracts/runtime-contract.json"):
         json.loads((ROOT / relative).read_text(encoding="utf-8"))
     subprocess.run(["bash", "-n", str(ROOT / "scripts/download-models.sh")], check=True)
+    subprocess.run(["bash", "-n", str(ROOT / "scripts/ensure-pytorch.sh")], check=True)
     subprocess.run(["bash", "-n", str(ROOT / "scripts/entrypoint.sh")], check=True)
 
     entrypoint = (ROOT / "scripts/entrypoint.sh").read_text(encoding="utf-8")

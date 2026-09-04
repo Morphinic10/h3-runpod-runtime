@@ -6,7 +6,8 @@ controllers.
 
 ## Included in the image
 
-- PyTorch 2.8.0 / CUDA 12.8 / cuDNN 9 runtime.
+- A slim Python 3.11 base; the pinned PyTorch 2.8.0 / CUDA 12.8 runtime is
+  installed visibly after the container and boot-log endpoints are online.
 - ComfyUI 0.34.0 at a pinned commit.
 - `ComfyUI-MiniMax-H3-PDD-Acc` at a pinned commit.
 - KJNodes with `MiniMaxLowVRAMAttention` and `MiniMaxChunkFeedForward`.
@@ -17,11 +18,14 @@ controllers.
 ## Not included in the image
 
 - Model weights.
+- CUDA/PyTorch wheel payloads; they are downloaded to ephemeral container disk
+  on every cold start so the registry image remains small.
 - Network-volume state.
 - API keys or registry credentials.
 - Campaign prompts, workflows, references, or outputs.
 
-At first boot, the default manifest downloads the current FL2VA/PDD8/Turbo8
+At first boot, the launcher first checks direct CUDA driver access, installs
+the pinned cu128 PyTorch wheels, then downloads the current FL2VA/PDD8/Turbo8
 stack to ephemeral `/workspace/models`:
 
 - FL2VA INT8 ConvRot base.
@@ -51,9 +55,10 @@ before submitting it.
 
 Set `H3_DOWNLOAD_MODELS=0` for a node-only/CUDA smoke boot. The default is `1`.
 
-The CUDA preflight retries for one minute by default and records the host
-driver, NVIDIA device files, direct `libcuda` initialization, and PyTorch CUDA
-state. If CUDA, a model download, or ComfyUI startup fails, the container stays
+The direct CUDA-driver preflight retries for one minute by default and records
+the host driver, NVIDIA device files, and `libcuda` initialization before the
+PyTorch payload is downloaded. It then runs a real PyTorch CUDA matrix test.
+If CUDA, runtime installation, a model download, or ComfyUI startup fails, the container stays
 alive and serves the failure at both `:8188/` and `:8189/launch.log` instead of
 crash-looping. Set `H3_HOLD_ON_ERROR=0` only in automated tests where a failed
 container must exit.

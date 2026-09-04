@@ -87,7 +87,7 @@ RUN git clone --filter=blob:none --no-checkout https://github.com/Jalen-Brunson/
 FROM ${BASE_IMAGE}
 
 LABEL org.opencontainers.image.title="H3 RunPod Runtime" \
-      org.opencontainers.image.description="Slim model-free MiniMax H3 runtime with observable cu128 bootstrap" \
+      org.opencontainers.image.description="Model-free ComfyUI with baked PyTorch cu128 and background H3 downloads" \
       org.opencontainers.image.source="https://github.com/morphinic10/h3-runpod-runtime" \
       org.opencontainers.image.licenses="MIT"
 
@@ -146,6 +146,11 @@ RUN chmod 0755 /usr/local/bin/download-models.sh /usr/local/bin/ensure-pytorch.s
     && test "$(ffprobe -v error -select_streams v:0 -show_entries stream=pix_fmt -of csv=p=0 /tmp/h3-main10.mp4)" = "yuv420p10le" \
     && rm -f /tmp/h3-main10.mp4 \
     && mkdir -p /workspace/ComfyUI/input /workspace/ComfyUI/output /workspace/ComfyUI/temp /workspace/ComfyUI/user/default/workflows
+
+# Keep the diagnostic/slim layers reusable while making the default image ready
+# to start ComfyUI without pip/network access. Weights remain outside the image.
+ARG BAKE_PYTORCH=1
+RUN if [ "$BAKE_PYTORCH" = 1 ]; then /usr/local/bin/ensure-pytorch.sh && python -m pip check; fi
 
 EXPOSE 8188 8189
 

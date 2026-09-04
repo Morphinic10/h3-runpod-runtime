@@ -87,3 +87,24 @@ jobs:
           grep -q 'clean H3 runtime starting' /tmp/launch.log
           grep -q 'direct CUDA driver probe 1/1' /tmp/launch.log
           grep -q 'keeping diagnostic endpoints alive' /tmp/launch.log
+      - uses: actions/checkout@v4
+      - name: Start real ComfyUI and check every required node on CPU
+        run: |
+          set -euo pipefail
+          image="${IMAGE_NAME}:sha-${GITHUB_SHA}"
+          docker run --detach --name h3-comfy-smoke \
+            --publish 8188:8188 --publish 8189:8189 \
+            --env H3_DOWNLOAD_MODELS=0 --env H3_DEVICE=cpu \
+            "$image"
+          trap 'docker logs h3-comfy-smoke || true; docker rm --force h3-comfy-smoke || true' EXIT
+          ready=0
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent http://127.0.0.1:8188/system_stats > /tmp/system-stats.json; then
+              ready=1
+              break
+            fi
+            sleep 2
+          done
+          test "$ready" = 1
+          python3 scripts/preflight.py --url http://127.0.0.1:8188 --allow-cpu
+          docker exec h3-comfy-smoke python -m pip check

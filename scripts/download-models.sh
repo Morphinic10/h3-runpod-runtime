@@ -99,12 +99,19 @@ echo "[models] missing payload: $missing_bytes bytes; free: $free_bytes bytes"
 (( free_bytes >= required_bytes )) || { echo "ERROR: need $required_bytes bytes free; found $free_bytes" >&2; exit 21; }
 
 job_count=0
+pids=()
+failed=0
 while IFS=$'\t' read -r relative_path expected_size expected_sha url; do
   [[ -z "${relative_path:-}" || "$relative_path" == \#* ]] && continue
   job_count=$((job_count + 1))
-  while (( $(jobs -pr | wc -l) >= MODEL_DOWNLOAD_CONCURRENCY )); do wait -n; done
+  if (( ${#pids[@]} >= MODEL_DOWNLOAD_CONCURRENCY )); then
+    if ! wait "${pids[0]}"; then failed=1; fi
+    pids=("${pids[@]:1}")
+  fi
   "$0" --one "$relative_path" "$expected_size" "$expected_sha" "$url" \
     > >(sed -u "s|^|[$job_count] |") 2> >(sed -u "s|^|[$job_count] |" >&2) &
+  pids+=("$!")
 done < "$MODEL_MANIFEST"
-wait
+for pid in "${pids[@]}"; do if ! wait "$pid"; then failed=1; fi; done
+(( failed == 0 )) || { echo "ERROR: at least one model download failed" >&2; exit 22; }
 echo "[models] all selected models are ready"

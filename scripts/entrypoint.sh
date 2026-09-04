@@ -7,6 +7,8 @@ COMFY_PORT="${COMFYUI_PORT:-8188}"
 HOLD_ON_ERROR="${H3_HOLD_ON_ERROR:-1}"
 CUDA_RETRIES="${H3_CUDA_RETRIES:-12}"
 CUDA_RETRY_DELAY_S="${H3_CUDA_RETRY_DELAY_S:-5}"
+DEVICE="${H3_DEVICE:-cuda}"
+[[ "$DEVICE" == cuda || "$DEVICE" == cpu ]] || { echo "ERROR: H3_DEVICE must be cuda or cpu" >&2; exit 64; }
 
 [[ "$LOG_PORT" =~ ^[0-9]+$ && "$COMFY_PORT" =~ ^[0-9]+$ ]] || {
   echo "ERROR: H3_LOG_PORT and COMFYUI_PORT must be integers" >&2
@@ -41,6 +43,7 @@ done
 LOG_SERVER_PID=""
 STATUS_SERVER_PID=""
 COMFY_PID=""
+MODEL_PID=""
 
 write_status() {
   local state="$1" message="$2"
@@ -109,6 +112,7 @@ on_signal() {
   set +e
   trap - ERR TERM INT
   stop_process "$COMFY_PID"
+  stop_process "$MODEL_PID"
   stop_process "$STATUS_SERVER_PID"
   stop_process "$LOG_SERVER_PID"
   exit 143
@@ -154,10 +158,8 @@ echo "[launcher] kernel=$(uname -srmo)"
 echo "[launcher] NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-unset}"
 echo "[launcher] CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
 echo "[launcher] NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES:-unset}"
-# Some RunPod Community hosts inject the NVIDIA container-runtime sentinel
-# `void` even though they also mount the assigned GPU device nodes.  `void`
-# deliberately disables CUDA discovery.  Clear only that sentinel (or `none`)
-# on an actual GPU Pod; never invent a CUDA device index.
+# RunPod can mount GPU devices outside NVIDIA Container Toolkit. Its `void`
+# sentinel alone does not prove CUDA is broken; measure the driver below.
 case "${NVIDIA_VISIBLE_DEVICES:-}" in
   void|none)
     if [[ -e /dev/nvidiactl ]]; then
@@ -174,11 +176,11 @@ ls -la /dev/nvidia* 2>&1 || true
 echo "[launcher] nvidia-smi:"
 nvidia-smi 2>&1 || true
 
+if [[ "$DEVICE" == cuda ]]; then
 driver_ok=0
 for attempt in $(seq 1 "$CUDA_RETRIES"); do
   echo "[launcher] direct CUDA driver probe ${attempt}/${CUDA_RETRIES}"
-  set +e
-  "$PY_BIN" - <<'PY'
+  if "$PY_BIN" - <<'PY'
 import ctypes
 
 count = ctypes.c_int(-1)
@@ -189,19 +191,21 @@ print(f"[launcher] libcuda: cuInit={init_rc} cuDeviceGetCount={count_rc} devices
 if init_rc != 0 or count_rc != 0 or count.value < 1:
     raise SystemExit(1)
 PY
-  driver_rc=$?
-  set -e
-  if (( driver_rc == 0 )); then
+  then
     driver_ok=1
     break
   fi
   (( attempt == CUDA_RETRIES )) || sleep "$CUDA_RETRY_DELAY_S"
 done
 (( driver_ok == 1 )) || { echo "ERROR: direct CUDA driver probe exhausted all retries" >&2; false; }
+else
+  echo "[launcher] Explicit CPU mode for CI; GPU readiness is NOT validated."
+fi
 
-write_status "installing_pytorch" "The GPU driver is healthy. Installing the pinned PyTorch CUDA 12.8 runtime."
+write_status "checking_pytorch" "Checking the pinned PyTorch CUDA 12.8 runtime."
 /usr/local/bin/ensure-pytorch.sh
 
+if [[ "$DEVICE" == cuda ]]; then
 echo "[launcher] PyTorch CUDA compute preflight"
 "$PY_BIN" - <<'PY'
 import torch
@@ -215,11 +219,21 @@ torch.cuda.synchronize()
 assert y.shape == x.shape
 print(f"[launcher] CUDA OK: {torch.cuda.get_device_name(0)}", flush=True)
 PY
+fi
 
-write_status "downloading_models" "CUDA is healthy. Downloading and checksum-verifying the model manifest."
+download_models() {
+  trap - ERR
+  write_status "downloading_models" "ComfyUI is starting. H3 models are downloading in the background; wait for models_ready before generation."
+  if /usr/local/bin/download-models.sh; then
+    write_status "models_ready" "All model checksums passed. Refresh ComfyUI model lists before generation."
+  else
+    write_status "model_download_failed" "ComfyUI is available, but model download failed. Inspect launch.log; do not submit an incomplete workflow."
+    return 1
+  fi
+}
 case "${H3_DOWNLOAD_MODELS:-1}" in
-  1|true|yes) /usr/local/bin/download-models.sh ;;
-  0|false|no) echo "[launcher] model download skipped by H3_DOWNLOAD_MODELS=0" ;;
+  1|true|yes) download_models & MODEL_PID=$! ;;
+  0|false|no) echo "[launcher] model download skipped by H3_DOWNLOAD_MODELS=0"; write_status "models_skipped" "ComfyUI is starting without models (explicit smoke-test mode)." ;;
   *) echo "ERROR: H3_DOWNLOAD_MODELS must be 0/1/false/true/no/yes" >&2; exit 64 ;;
 esac
 
@@ -250,16 +264,13 @@ args=(
 case "${COMFYUI_DISABLE_PINNED_MEMORY:-1}" in 1|true|yes) args+=(--disable-pinned-memory);; 0|false|no) :;; *) exit 64;; esac
 case "${COMFYUI_CACHE_NONE:-1}" in 1|true|yes) args+=(--cache-none);; 0|false|no) :;; *) exit 64;; esac
 
-write_status "starting_comfyui" "Models are ready. Releasing port 8188 to ComfyUI."
+[[ "$DEVICE" != cpu ]] || args+=(--cpu)
 stop_process "$STATUS_SERVER_PID"
 STATUS_SERVER_PID=""
 echo "[launcher] starting ComfyUI on port $COMFY_PORT"
-set +e
 "$PY_BIN" "${args[@]}" &
 COMFY_PID=$!
-wait "$COMFY_PID"
-comfy_rc=$?
+if wait "$COMFY_PID"; then comfy_rc=0; else comfy_rc=$?; fi
 COMFY_PID=""
-set -e
 echo "ERROR: ComfyUI exited unexpectedly with status=$comfy_rc" >&2
 fatal_hold "$comfy_rc" "$LINENO"

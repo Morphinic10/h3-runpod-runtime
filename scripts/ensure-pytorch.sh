@@ -26,8 +26,8 @@ fi
 
 echo "[runtime] installing PyTorch ${TORCH_VERSION} CUDA 12.8 after container start"
 python -m pip install \
-  --ignore-installed \
   --no-cache-dir \
+  --constraint /opt/h3/config/python-constraints.txt \
   --index-url "$TORCH_INDEX_URL" \
   "torch==${TORCH_VERSION}" \
   "torchvision==${TORCHVISION_VERSION}" \

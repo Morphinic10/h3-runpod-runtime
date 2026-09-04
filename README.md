@@ -6,8 +6,8 @@ controllers.
 
 ## Included in the image
 
-- A slim Python 3.11 base; the pinned PyTorch 2.8.0 / CUDA 12.8 runtime is
-  installed visibly after the container and boot-log endpoints are online.
+- Python 3.11 and pinned PyTorch 2.8.0 / CUDA 12.8, installed at image build
+  time so a normal start does not reinstall PyTorch.
 - ComfyUI 0.34.0 at a pinned commit.
 - `ComfyUI-MiniMax-H3-PDD-Acc` at a pinned commit.
 - KJNodes with `MiniMaxLowVRAMAttention` and `MiniMaxChunkFeedForward`.
@@ -18,15 +18,13 @@ controllers.
 ## Not included in the image
 
 - Model weights.
-- CUDA/PyTorch wheel payloads; they are downloaded to ephemeral container disk
-  on every cold start so the registry image remains small.
 - Network-volume state.
 - API keys or registry credentials.
 - Campaign prompts, workflows, references, or outputs.
 
-At first boot, the launcher first checks direct CUDA driver access, installs
-the pinned cu128 PyTorch wheels, then downloads the current FL2VA/PDD8/Turbo8
-stack to ephemeral `/workspace/models`:
+At first boot, the launcher checks direct CUDA driver access and runs a real
+PyTorch GPU matrix multiplication, then starts ComfyUI while downloading the
+current FL2VA/PDD8/Turbo8 stack to ephemeral `/workspace/models`:
 
 - FL2VA INT8 ConvRot base.
 - Qwen3-VL MiniMax H3 text encoder.
@@ -49,6 +47,8 @@ before submitting it.
 - ComfyUI: port `8188`.
 - Boot/model log: port `8189`, path `/launch.log`.
 - During boot, port `8188` serves a small status page until ComfyUI takes over.
+- Model downloads do not block the UI. Check `:8189/status.json` for
+  `models_ready`, then refresh the ComfyUI model lists before generation.
 - No network volume.
 - No global Sage attention flag; attention is selected in the graph.
 - Pinned memory disabled and ComfyUI cache disabled for predictable RAM use.
@@ -58,14 +58,22 @@ Set `H3_DOWNLOAD_MODELS=0` for a node-only/CUDA smoke boot. The default is `1`.
 The direct CUDA-driver preflight retries for one minute by default and records
 the host driver, NVIDIA device files, and `libcuda` initialization before the
 PyTorch payload is downloaded. It then runs a real PyTorch CUDA matrix test.
-If CUDA, runtime installation, a model download, or ComfyUI startup fails, the container stays
+If CUDA, runtime installation, or ComfyUI startup fails, the container stays
 alive and serves the failure at both `:8188/` and `:8189/launch.log` instead of
 crash-looping. Set `H3_HOLD_ON_ERROR=0` only in automated tests where a failed
 container must exit.
 
-On GPU Pods, the launcher also clears RunPod's `NVIDIA_VISIBLE_DEVICES=void`
-or `none` sentinel when NVIDIA device nodes are already mounted. It leaves
-normal UUID/index/all values untouched and never sets `CUDA_VISIBLE_DEVICES`.
+Model download failures are reported as `model_download_failed`; they never
+claim readiness, and the UI remains available for diagnosis. Failed GPU Pods
+still cost money until stopped: the operator must stop a failed paid test.
+
+`NVIDIA_VISIBLE_DEVICES=void` alone is not evidence that CUDA is broken.
+RunPod can mount devices separately from NVIDIA Container Toolkit. The direct
+CUDA probe and PyTorch matrix test determine actual GPU health.
+
+For diagnostic use only, `--build-arg BAKE_PYTORCH=0` retains the former slim
+image behavior. Production builds bake the runtime, never the models.
+`H3_DEVICE=cpu` is an explicit CI mode; it does not validate GPU readiness.
 
 After ComfyUI is ready, validate the live runtime from any machine with:
 
@@ -75,7 +83,8 @@ python3 scripts/preflight.py --url https://POD_ID-8188.proxy.runpod.net --requir
 
 The preflight checks every node used by the pinned Turbo8 graph, the requested
 PDD and KJNodes nodes, all six model filenames, and the
-`video/h265-mp4-16in` format exposed by VideoHelperSuite.
+`video/h265-mp4-16in` format exposed by VideoHelperSuite. It requires a CUDA
+device unless `--allow-cpu` is explicitly used for a CI-only node check.
 
 ## Publishing
 

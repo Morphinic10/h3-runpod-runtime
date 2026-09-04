@@ -45,6 +45,7 @@ def main() -> None:
     parser.add_argument("--url", required=True)
     parser.add_argument("--contract", type=Path, default=DEFAULT_CONTRACT)
     parser.add_argument("--require-models", action="store_true")
+    parser.add_argument("--allow-cpu", action="store_true", help="CI node checks only; does not validate GPU readiness")
     args = parser.parse_args()
 
     contract = json.loads(args.contract.read_text(encoding="utf-8"))
@@ -75,8 +76,10 @@ def main() -> None:
     if contract["required_video_format"] not in available_formats:
         missing_video_format = contract["required_video_format"]
 
+    cuda_ready = any(device.get("type") == "cuda" for device in stats.get("devices", []))
     result = {
-        "ok": not missing_nodes and not missing_models and not missing_video_format,
+        "ok": not missing_nodes and not missing_models and not missing_video_format and (cuda_ready or args.allow_cpu),
+        "cuda_ready": cuda_ready,
         "devices": stats.get("devices", []),
         "checked_nodes": len(required_nodes),
         "missing_nodes": missing_nodes,

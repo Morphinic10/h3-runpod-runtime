@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "image": "ghcr.io/morphinic10/h3-runpod-runtime@sha256:8d49c35fac205e019b5814f51877e5dff16fccdd33c0d580fa481527e7e4ffa6",
+  "platform": "linux/amd64",
+  "index_digest": "sha256:86cf92d9c216028bee8943053a36d4526f9f276328f62c95dae22c5c8e7c1c4e",
+  "source_commit": "87ab2bdd693942d6e85a1a8ad24271e301087c61",
+  "compressed_bytes": 5080930396,
+  "validation": {
+    "date": "2026-09-05",
+    "ci_run": "https://github.com/Morphinic10/h3-runpod-runtime/actions/runs/33925597123",
+    "build": "passed",
+    "anonymous_pull": "passed",
+    "comfyui_cpu_start_and_required_nodes": "passed",
+    "launcher_spending_safeguards": "passed",
+    "model_download_failure_propagation": "passed",
+    "community_gpu_compute": "not_validated",
+    "h3_generation": "not_validated"
+  }
+}

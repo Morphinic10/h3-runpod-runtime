@@ -44,11 +44,20 @@ before submitting it.
 
 ### One-command Community 4090 launcher
 
+On this Mac, double-click `Open-ComfyUI-4090.command`. It opens the browser after
+the selected image passes the GPU/node/model checks. Double-click
+`Stop-ComfyUI-4090.command` when finished. The published image digest is stored
+in `config/published-image.json` after CI validation; GPU validation is recorded
+separately and must not be inferred from CPU tests.
+
 ```bash
-python3 scripts/runpod.py up --image ghcr.io/morphinic10/h3-runpod-runtime@sha256:YOUR_VERIFIED_DIGEST
+python3 scripts/runpod.py up
 python3 scripts/runpod.py status
 python3 scripts/runpod.py stop
 ```
+
+An explicit `--image ghcr.io/morphinic10/h3-runpod-runtime@sha256:...` overrides
+the published digest for a controlled test.
 
 The launcher uses the existing local Lab key on this workstation. Elsewhere,
 set `RUNPOD_API_KEY` or `RUNPOD_ENV_FILE`; credentials are never sent to the Pod.

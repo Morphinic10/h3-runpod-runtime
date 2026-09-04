@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 STATE = ROOT / '.runpod' / 'state.json'
-DEFAULT_ENV = Path('/Users/nicateggwp/Desktop/H3_Workflow_Lab/.secrets/runpod.env')
+DEFAULT_ENV = Path.home() / 'Desktop/H3_Workflow_Lab/.secrets/runpod.env'
 
 
 def key() -> str:

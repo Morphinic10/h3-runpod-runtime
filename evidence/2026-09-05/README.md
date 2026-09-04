@@ -45,3 +45,22 @@ guarantee repair of a host UVM device returning I/O errors.
 The new image bakes the pinned PyTorch runtime, starts the UI while models
 download, and CI starts actual ComfyUI on CPU and checks required nodes. CPU CI
 does not establish GPU or H3 rendering readiness.
+
+Final runtime source: `87ab2bdd693942d6e85a1a8ad24271e301087c61`.
+Build, anonymous image pull, actual CPU ComfyUI startup, all required nodes,
+launcher safeguards and the Linux download-failure regression passed:
+https://github.com/Morphinic10/h3-runpod-runtime/actions/runs/33925597123
+
+The exact runnable linux/amd64 manifest is selected directly by
+`config/published-image.json` (no platform/index ambiguity). Compressed image:
+5,080,930,396 bytes. All six pinned model URLs also passed anonymous HEAD checks
+with Content-Length matching the manifest; weights were not downloaded.
+
+## Bounded live boot of the baked prototype
+
+The standalone launcher later obtained a US allocation on `w8d456itlyzv`
+(`0y8nszpcnzh3a6`) with the CPU-tested baked prototype image `a98a279...`.
+No runtime/status endpoint became available in the eight-minute boot window.
+The launcher automatically stopped that exact Pod and an independent API read
+confirmed there were zero active Pods. This validates the live timeout/spend
+cleanup path, not GPU compute. The final `87ab2bd` image is still GPU-unvalidated.

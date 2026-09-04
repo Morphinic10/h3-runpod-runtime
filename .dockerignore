@@ -1,0 +1,15 @@
+.git
+.github
+**/__pycache__
+**/*.pyc
+**/*.pyo
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.mp4
+*.mov
+*.png
+*.jpg
+*.jpeg
+.DS_Store

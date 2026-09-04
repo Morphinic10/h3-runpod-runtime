@@ -154,6 +154,18 @@ echo "[launcher] kernel=$(uname -srmo)"
 echo "[launcher] NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES:-unset}"
 echo "[launcher] CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
 echo "[launcher] NVIDIA_DRIVER_CAPABILITIES=${NVIDIA_DRIVER_CAPABILITIES:-unset}"
+# Some RunPod Community hosts inject the NVIDIA container-runtime sentinel
+# `void` even though they also mount the assigned GPU device nodes.  `void`
+# deliberately disables CUDA discovery.  Clear only that sentinel (or `none`)
+# on an actual GPU Pod; never invent a CUDA device index.
+case "${NVIDIA_VISIBLE_DEVICES:-}" in
+  void|none)
+    if [[ -e /dev/nvidiactl ]]; then
+      echo "[launcher] clearing NVIDIA_VISIBLE_DEVICES=${NVIDIA_VISIBLE_DEVICES}; GPU device nodes are mounted"
+      unset NVIDIA_VISIBLE_DEVICES
+    fi
+    ;;
+esac
 if [[ -r /sys/fs/cgroup/memory.max ]]; then
   echo "[launcher] cgroup memory.max=$(</sys/fs/cgroup/memory.max)"
 fi

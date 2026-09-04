@@ -58,6 +58,10 @@ alive and serves the failure at both `:8188/` and `:8189/launch.log` instead of
 crash-looping. Set `H3_HOLD_ON_ERROR=0` only in automated tests where a failed
 container must exit.
 
+On GPU Pods, the launcher also clears RunPod's `NVIDIA_VISIBLE_DEVICES=void`
+or `none` sentinel when NVIDIA device nodes are already mounted. It leaves
+normal UUID/index/all values untouched and never sets `CUDA_VISIBLE_DEVICES`.
+
 After ComfyUI is ready, validate the live runtime from any machine with:
 
 ```bash

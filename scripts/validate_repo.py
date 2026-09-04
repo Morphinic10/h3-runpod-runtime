@@ -66,6 +66,7 @@ def main() -> None:
         "H3_CUDA_RETRIES",
         "ctypes.CDLL(\"libcuda.so.1\")",
         "torch.cuda.is_available",
+        "clearing NVIDIA_VISIBLE_DEVICES=",
         "start_status_server",
         "fatal_hold",
     ):

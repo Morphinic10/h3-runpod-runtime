@@ -53,3 +53,37 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: mode=max
           sbom: true
+
+  smoke-container-start:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull the published image anonymously
+        run: docker pull "${IMAGE_NAME}:sha-${GITHUB_SHA}"
+      - name: Verify the baked startup contract
+        run: |
+          set -euo pipefail
+          image="${IMAGE_NAME}:sha-${GITHUB_SHA}"
+          test "$(docker image inspect "$image" --format '{{json .Config.Entrypoint}}')" = '["/usr/bin/tini","--","/usr/local/bin/entrypoint.sh"]'
+          docker run --detach --name h3-runtime-smoke \
+            --publish 8188:8188 \
+            --publish 8189:8189 \
+            --env H3_DOWNLOAD_MODELS=0 \
+            --env H3_CUDA_RETRIES=1 \
+            --env H3_CUDA_RETRY_DELAY_S=0 \
+            "$image"
+          trap 'docker logs h3-runtime-smoke || true; docker rm --force h3-runtime-smoke || true' EXIT
+          ready=0
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8188/status.json > /tmp/status.json \
+              && curl --fail --silent http://127.0.0.1:8189/launch.log > /tmp/launch.log \
+              && grep -q '"state": "failed"' /tmp/status.json; then
+              ready=1
+              break
+            fi
+            sleep 1
+          done
+          test "$ready" = 1
+          grep -q 'clean H3 runtime starting' /tmp/launch.log
+          grep -q 'direct CUDA driver probe 1/1' /tmp/launch.log
+          grep -q 'keeping diagnostic endpoints alive' /tmp/launch.log
